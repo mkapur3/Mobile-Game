@@ -1,0 +1,136 @@
+Section 2. Rolling 30-Day Retention Rate
+ 
+SELECT 
+    joined AS day_joined, -- The day each player joined the game 
+    COUNT(player_id) AS total_players_joined, -- The total number of players who joined the game for each day
+    SUM(retention_status) AS total_players_retained, -- The total number of players who were retained for each day
+    ROUND((SUM(retention_status)/COUNT(player_id))* 100, 2)AS ret_rate -- The fractional retention rate for each day 
+FROM (      --  We select the player id, location, and the day they joined for each player
+    SELECT
+        p.player_id,
+        p.joined, 
+        CASE  -- The case statement will assign a value of '1' for a player who played a match anytime after 30 days of joining and '0' for those players who did not
+            WHEN (MAX(m.day) - min (p.joined) ) > 30 
+            THEN 1
+            ELSE 0
+        END AS retention_status
+    FROM 
+        `ordinal-tower-341322.sql_project_1.player_info` AS p
+    JOIN `ordinal-tower-341322.sql_project_1.matches_info` AS m 
+        ON p.player_id = m.player_id -- Using player.id as the key to join Player and Matches tables from the schema
+    GROUP BY
+        p.joined,
+        p.player_id
+    )
+GROUP BY day_joined; 
+ 
+
+
+
+
+Section 3. Rolling 30-Day Retention Rate by location
+
+
+SELECT
+COUNT(player_id) AS total_players_joined, -- The total number of players who joined the game from each location (continent)
+  location, -- The different locations (continents)
+  ROUND((SUM(retention_status)/COUNT(player_id)) *100, 2) AS ret_rate -- The fractional retention rate for each continent 
+FROM (
+  SELECT
+    p.player_id,
+    P.joined,
+    p.location,
+    CASE -- The case statement will assign a value of '1' for a player who played a match anytime after 30 days of joining and '0' for those players who did not
+      WHEN (MAX(m.day) - min (p.joined) ) > 30 THEN 1
+    ELSE
+    0
+  END
+    AS retention_status
+  FROM 
+        `ordinal-tower-341322.sql_project_1.player_info` AS p
+    JOIN `ordinal-tower-341322.sql_project_1.matches_info` AS m 
+  ON
+    p.player_id = M.player_id -- Using player.id as the key to join Player and Matches tables from the schema
+  GROUP BY
+    p.location,
+    p.joined,
+    P.player_id )
+GROUP BY 
+  location
+ORDER BY
+  location
+
+
+
+
+
+
+
+
+Section 4. Number of retained players by age 
+
+SELECT
+  COUNT (player_id) AS total_players_joined, -- The total number of players who joined the game for each year of age
+  age,  -- The age of each player                                       
+  ROUND((SUM(retention_status)/COUNT(player_id)) *100, 2) AS ret_rate -- The fractional retention rate for each year of age
+FROM ( --  We select the player id, location, and the day they joined for each player
+  SELECT
+    p.player_id,
+    P.joined AS joined,
+    P.age AS age,
+    CASE -- The case statement will assign a value of '1' for a player who played a match anytime after 30 days of joining and '0' for those players who did not
+      WHEN (MAX(m.day) - min (p.joined) ) > 30 THEN 1
+    ELSE
+    0
+  END
+    AS retention_status
+ FROM `ordinal-tower-341322.sql_project_1.player_info` AS p
+    JOIN `ordinal-tower-341322.sql_project_1.matches_info` AS m
+ON
+  p.player_id = m.player_id -- Using player.id as the key to join Player and Matches tables from the schema
+  GROUP BY
+    P.player_id,
+    p.joined,
+    p.age)
+  GROUP BY age
+  ORDER BY age; -- The output displays the number of players and retention rate by each player in ascending order of age 
+
+
+
+
+Section 5. Average age of players by location
+
+
+SELECT
+ location, -- The different locations (continents)
+ ROUND(AVG (age), 2) as average_age_of_players --  The average age of players who joined from each continent 
+FROM
+    (SELECT
+        p.player_id,
+        P.location,
+        P.joined AS joined,
+        P.age,
+        CASE -- The case statement will assign a value of '1' for a player who played a match anytime after 30 days of joining and '0' for those players who did not
+            WHEN (MAX(m.day) - min (p.joined) ) > 30
+            THEN 1
+            ELSE 0
+        END AS retention_status
+    FROM 
+        `ordinal-tower-341322.sql_project_1.player_info` AS p
+    JOIN `ordinal-tower-341322.sql_project_1.matches_info` AS m 
+        ON p.player_id = m.player_id -- Using player.id as the key to join Player and Matches tables from the schema
+    GROUP BY p.joined, p.player_id, location, p.age
+    ORDER BY location)
+     GROUP BY location 
+     ORDER BY location; -- Ordering in ascending order for players joined by each continent
+
+
+
+
+
+
+
+
+
+
+
