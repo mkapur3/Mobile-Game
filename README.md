@@ -47,6 +47,7 @@ We use the same query as in Section 2 but GROUP BY and ORDER BY location to aggr
 The above graph shows that retention rate is extremely consistent across all continents in the range of 61.3% - 63.6%. The game’s largest market in absolute terms is North America with 7,506 total players joining the game in its first year of service. The game’s positive performance in both attracting and retaining players across diverse geographies in its debut year is a highly encouraging sign for the corporation. 
 
 We use the same query as in Section 2 but `GROUP BY` and `ORDER BY` `age` to aggregate the `total_players_joined` and `total_players_retained` by each age year as well as to compare the retention rate (i.e. `ret_rate` in the query across different ages). 
+
 [Link](Project%20query.txt) to full query here.
 
 ## 4. NUMBER OF PLAYERS RETAINED BY AGE
