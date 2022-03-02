@@ -54,7 +54,7 @@ We use the same query as in Section 2 but `GROUP BY` and `ORDER BY` `age` to agg
 
 [Link](Project%20query.txt) to full query here.
 
-We use the same query as in Section 2 but remove the day_joined and total_players_retained columns in the main query. Instead, we add in the age column in the `SELECT` clause of the main query.
+We use the same query as in Section 2 but remove the `day_joined` and `total_players_retained` columns in the main query. Instead, we add in the `age` column in the `SELECT` clause of the main query.
  
 We `GROUP BY` `p.age` in the subquery and  we also `GROUP BY` and `ORDER BY` `age` in the main query to get the results segmented by players’ `age`. 
 
